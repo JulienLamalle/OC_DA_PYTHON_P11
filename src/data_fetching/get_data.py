@@ -1,7 +1,5 @@
 import json
 from pathlib import Path
-from src import db
-import os
 
 DATABASE_CLUBS_PATH = Path(__file__).resolve().parent.parent / "db/clubs.json"
 DATABASE_COMPETITIONS_PATH = Path(
@@ -18,7 +16,18 @@ def load_competitions():
     return json.load(file)['competitions']
 
 
+def get_club_by_email(email):
+  try:
+    if clubs:
+      for club in clubs:
+        if club['email'] == email:
+          return club
+  except (ValueError, KeyError, TypeError):
+    return None
+
+
 def load():
-  CLUBS = load_clubs()
-  COMPETITIONS = load_competitions()
-  return CLUBS, COMPETITIONS
+  global clubs
+  global competitions
+  clubs = load_clubs()
+  competitions = load_competitions()
