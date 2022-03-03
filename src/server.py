@@ -2,14 +2,13 @@ import json
 from flask import Flask,render_template,request,redirect,flash,url_for
 
 from src.data_fetching import get_data
+from src.helper.helper import is_valid_purchase
 
 
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
 get_data.load()
-competitions = get_data.load_competitions()
-clubs = get_data.load_clubs()
 
 @app.route('/')
 def index():
@@ -18,30 +17,34 @@ def index():
 @app.route('/show-summary',methods=['POST'])
 def show_summary():
     if club := get_data.get_club_by_email(request.form['email']):
-        return render_template('welcome.html',club=club,competitions=competitions)
+        return render_template('welcome.html',club=club,competitions=get_data.competitions)
     flash("Sorry, that email wasn't found.")
     return redirect(url_for('index'))
 
 
 @app.route('/book/<competition>/<club>')
 def book(competition,club):
-    found_club = [c for c in clubs if c['name'] == club][0]
-    found_competition = [c for c in competitions if c['name'] == competition][0]
+    found_club = get_data.get_club_by_name(club)
+    found_competition = get_data.get_competition_by_name(competition)
     if found_club and found_competition:
         return render_template('booking.html',club=found_club,competition=found_competition)
-    else:
-        flash("Something went wrong-please try again")
-        return render_template('welcome.html', club=club, competitions=competitions)
+    flash("Something went wrong-please try again")
+    return render_template('welcome.html', club=club, competitions=get_data.competitions)
 
 
 @app.route('/purchase-places',methods=['POST'])
 def purchase_places():
-    competition = [c for c in competitions if c['name'] == request.form['competition']][0]
-    club = [c for c in clubs if c['name'] == request.form['club']][0]
+    competition = get_data.get_competition_by_name(request.form["competition"])
+    club = get_data.get_club_by_name(request.form["club"])
     places_required = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-places_required
-    flash('Great-booking complete!')
-    return render_template('welcome.html', club=club, competitions=competitions)
+    print("Competition:",competition)
+    if is_valid_purchase(competition,club,places_required):
+        competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - int(places_required)
+        club["points"] = int(club["points"]) - int(places_required)
+        flash('Great-booking complete!')
+    else: 
+        flash("Sorry, that wasn't a valid purchase, maybe you don't have enough points or competition is full, you're also not allowed to book negative or zero places")
+    return render_template('welcome.html', club=club, competitions=get_data.competitions)
 
 
 # TODO: Add route for points display
