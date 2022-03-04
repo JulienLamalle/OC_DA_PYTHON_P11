@@ -49,7 +49,12 @@ def purchase_places():
     return render_template('welcome.html', club=club, competitions=get_data.competitions)
 
 
-# TODO: Add route for points display
+@app.route('/clubs')
+def clubs():
+    if clubs := get_data.clubs:
+        return render_template('clubs.html',clubs=clubs)
+    flash("Sorry, there are no clubs to show")
+    return redirect(url_for('index'))
 
 
 @app.route('/logout')

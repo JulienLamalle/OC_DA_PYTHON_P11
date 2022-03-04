@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liste des clubs</title>
+  <style>
+    table, th, td {
+      border: 1px solid black;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h3>Liste des clubs</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Nombre de points</th>
+        </tr>
+      </thead>
+      <tbody">
+        {% for club in clubs %}
+          <tr>
+            <td>{{ club.name }}</td>
+            <td>{{ club.points }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+  </main>
+</body>
+</html>
