@@ -5,4 +5,6 @@ def is_valid_purchase(competition, club, required_places):
     return False
   if int(required_places) > int(club["points"]):
     return False
+  if int(required_places) > 12:
+    return False
   return True
