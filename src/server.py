@@ -40,7 +40,7 @@ def purchase_places():
     if competition and club and is_not_a_past_competition(competition):
         if is_valid_purchase(competition,club,places_required):
             competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - int(places_required)
-            club["points"] = int(club["points"]) - int(places_required)
+            club["points"] = int(club["points"]) - (int(places_required) * 3)
             flash('Great-booking complete!')
         else: 
             flash("Sorry, that wasn't a valid purchase, maybe you don't have enough points or competition is full, you're also not allowed to book negative or zero places")

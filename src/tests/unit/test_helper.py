@@ -40,3 +40,12 @@ def test_is_not_a_past_competition(tests_database):
 def test_is_not_a_past_competition_returns_false_if_competition_is_in_the_past(tests_database):
   assert helper.is_not_a_past_competition(
     tests_database.competitions[2]) is False
+
+
+def test_define_max_places_we_can_purchase(tests_database):
+  assert helper.define_max_places_we_can_purchase(
+    tests_database.clubs[1]) == 4
+
+def test_define_max_places_we_can_purchase_when_club_have_any_points(tests_database):
+  assert helper.define_max_places_we_can_purchase(
+    tests_database.clubs[0]) == 0

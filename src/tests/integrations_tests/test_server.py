@@ -44,7 +44,7 @@ def test_to_purchase_places(client, tests_database):
   assert b'Great-booking complete!' in response.data
   assert int(tests_database.competitions[0]
              ["numberOfPlaces"]) == available_places_in_competition - 1
-  assert int(tests_database.clubs[2]["points"]) == available_club_points - 1
+  assert int(tests_database.clubs[2]["points"]) == available_club_points - 1 * 3
 
 
 def test_booking_more_than_available_places(client, tests_database):
